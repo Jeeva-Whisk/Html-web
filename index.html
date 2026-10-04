@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panda shop</title>
+<style>
+  :root { --ink:#1f2a44; --sun:#ffc933; --paper:#f4f6f9; --card:#ffffff; --green:#17795a; --line:#dde2ea; }
+  * { box-sizing:border-box; margin:0; }
+  body { font-family:"Trebuchet MS", Verdana, sans-serif; background:var(--paper); color:var(--ink); }
+  header { background:var(--ink); color:#fff; display:flex; align-items:center; gap:16px; padding:12px 20px; flex-wrap:wrap; }
+  .logo { font-size:1.6rem; font-weight:bold; letter-spacing:1px; }
+  .logo span { color:var(--sun); }
+  #search { flex:1; min-width:180px; padding:10px 14px; border:0; border-radius:6px; font-size:1rem; }
+  .cart { background:var(--sun); color:var(--ink); padding:10px 16px; border-radius:6px; font-weight:bold; }
+  .hero { padding:48px 20px; background:var(--sun); }
+  .hero h1 { font-size:2.4rem; max-width:14ch; line-height:1.1; }
+  .hero p { margin-top:10px; max-width:42ch; }
+  main { max-width:1100px; margin:0 auto; padding:28px 20px 48px; }
+  h2 { margin-bottom:16px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:18px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:18px; display:flex; flex-direction:column; gap:8px; }
+  .pic { font-size:4rem; text-align:center; background:var(--paper); border-radius:8px; padding:18px 0; }
+  .price { font-size:1.2rem; font-weight:bold; }
+  .stars { color:#d98e00; }
+  button.add { margin-top:auto; padding:10px; border:0; border-radius:6px; background:var(--ink); color:#fff; font-size:1rem; cursor:pointer; }
+  button.add:hover { background:var(--green); }
+  button.add:focus-visible, #search:focus-visible { outline:3px solid var(--sun); outline-offset:2px; }
+  #empty { display:none; padding:20px 0; }
+  footer { text-align:center; padding:20px; border-top:1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Panda<span>Shop</span></div>
+  <input id="search" type="search" placeholder="Identify products">
+  <div class="cart">Cart: <span id="count">0</span> items &middot; $<span id="total">0.00</span></div>
+</header>
+
+<section class="hero">
+  <h1>Everything you need, one click away</h1>
+  <p>Pick your favorites and add them to your cart. Free delivery on every order.</p>
+</section>
+
+<main>
+  <h2>Popular products</h2>
+  <div class="grid" id="grid"></div>
+  <p id="empty">No products found. Try a different word.</p>
+</main>
+
+<footer>&copy; 2026 MyShop. Made with HTML, CSS and JavaScript.</footer>
+
+<script>
+  // To add a product, copy one line and change the emoji, name, price and rating.
+  const products = [
+    { icon:"🎧", name:"Wireless Headphones", price:49.99, rating:4 },
+    { icon:"⌚", name:"Smart Watch", price:89.00, rating:5 },
+    { icon:"📱", name:"Phone Case", price:12.50, rating:4 },
+    { icon:"🎒", name:"School Backpack", price:34.90, rating:4 },
+    { icon:"👟", name:"Running Shoes", price:64.00, rating:5 },
+    { icon:"💡", name:"Desk Lamp", price:22.75, rating:3 },
+    { icon:"📚", name:"Notebook Set", price:9.99, rating:5 },
+    { icon:"🔊", name:"Bluetooth Speaker", price:39.50, rating:4 }
+  ];
+
+  let count = 0, total = 0;
+  const grid = document.getElementById("grid");
+
+  function show(list) {
+    grid.innerHTML = "";
+    list.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML =
+        '<div class="pic">' + p.icon + '</div>' +
+        '<div>' + p.name + '</div>' +
+        '<div class="stars">' + "★".repeat(p.rating) + "☆".repeat(5 - p.rating) + '</div>' +
+        '<div class="price">$' + p.price.toFixed(2) + '</div>' +
+        '<button class="add">Add to cart</button>';
+      card.querySelector("button").addEventListener("click", () => {
+        count++;
+        total += p.price;
+        document.getElementById("count").textContent = count;
+        document.getElementById("total").textContent = total.toFixed(2);
+      });
+      grid.appendChild(card);
+    });
+    document.getElementById("empty").style.display = list.length ? "none" : "block";
+  }
+
+  document.getElementById("search").addEventListener("input", e => {
+    const word = e.target.value.toLowerCase();
+    show(products.filter(p => p.name.toLowerCase().includes(word)));
+  });
+
+  show(products);
+</script>
+</body>
+</html>
